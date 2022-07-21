@@ -50,8 +50,8 @@ def check_corr():
                                      COL_LOW: 'min', 
                                      COL_CLOSE: 'last'})
             df_w['change'] = df_w[COL_CLOSE].pct_change()*100
-            #df['change'] = df[COL_CLOSE].pct_change()*100
-            #ipdb.set_trace()
+            # df['change'] = df[COL_CLOSE].pct_change()*100
+            # ipdb.set_trace()
             print('{eq}, corr = {corr}'.format(eq=name, corr=round(df_w['change'].autocorr(2),2)))
 
 
