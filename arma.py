@@ -18,7 +18,6 @@ import pickle
 import numpy as np
 
 EQ = r'wigtech.txt'
-# DB_PATH= r'temp/pl/wse indices/'
 DB_PATH = r'Dropbox/projects/forecast/data/'
 SERIALIZED_MODEL = 'arima.model'
 COL_DATE = '<DATE>'
