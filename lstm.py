@@ -1,4 +1,4 @@
-# LSTM for international airline passengers problem with regression framing
+# LSTM for stock exchange forecasting
 import ipdb
 import numpy
 import matplotlib.pyplot as plt
