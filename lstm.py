@@ -10,6 +10,7 @@ from pmdarima.metrics import smape
 from common import load_model, save_model, get_data, plot_forecast
 from keras.utils.vis_utils import plot_model
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 
 # False - the model will be computed from scratch and saved, 
 # True - the mode will be loaded from the file
@@ -53,6 +54,13 @@ def plot_performance(history):
 
 # load the dataset
 dataset = get_data("data/swig80.txt")
+# scale
+dataset = dataset.reshape(-1, 1)
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaler.fit(dataset)
+dataset = scaler.transform(dataset)
+dataset = dataset.squeeze()
+
 # reshape into X=t and Y=t+1
 window = 6
 X, y = to_windows(dataset, window)
@@ -84,13 +92,21 @@ trainPredict = model.predict(train_X)
 testPredict = model.predict(test_X)
 naive = numpy.roll(test_y, 2)
 # calculate root mean squared error
-print(f"SMAPE for train: {smape(train_y, trainPredict[:, 0])})")
-print(f"SMAPE for test: {smape(test_y, testPredict[:, 0])})")
-print(f"SMAPE for naive: {smape(test_y, naive)})")
+print(f"SMAPE for train: {round(smape(train_y, trainPredict[:, 0]),2)})")
+print(f"SMAPE for test: {round(smape(test_y, testPredict[:, 0]),2)})")
+print(f"SMAPE for naive: {round(smape(test_y, naive),2)})")
 
 # Get the real values from test data
 test_X = test_X.squeeze()
 # We shift by 1 to get value x+1
 Y = test_X[1:, window-1]
+Y = Y.reshape(-1, 1)
+Y = scaler.inverse_transform(Y)
+Y = Y.squeeze()
+
+testPredict = testPredict.reshape(-1, 1)
+testPredict = scaler.inverse_transform(testPredict)
+testPredict = testPredict.squeeze()
+
 # Plot the forecast vs the real values
 plot_forecast(testPredict, Y)
